@@ -4,11 +4,58 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>File Translation Micro-Service</title>
+    <link rel="stylesheet" href="/static/style.css">
 </head>
 
 <body>
 
+    <div class="container">
+        <h1>Translate Your Text File</h1>
+        <form id="uploadForm" enctype="multipart/form-data">
+            <label for="file">Select a text file (.txt):</label>
+            <input type="file" id="file" name="file" accept=".txt" required>
+            <label for="language">Select target language:</label>
+            <select id="language" name="language" required>
+                <option value="Bangla" selected>Bangla</option>
+                <option value="French">French</option>
+                <option value="Spanish">Spanish</option>
+                <option value="German">German</option>
+            </select>
+            <button type="submit">Translate</button>
+        </form>
+        <div id="status"></div>
+        <div id="history"></div>
+    </div>
+
+
+
+    <script>
+        const uploadForm = document.getElementById('uploadForm');
+        const statusDiv = document.getElementById('status');
+        const historyDiv = document.getElementById('history');
+
+        uploadForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const formData = new FormData(uploadForm);
+            const response = await fetch('/ws/upload/', {
+                method: 'POST',
+                body: formData
+            });
+            const data = await response.json();
+            const sessionId = data.session_id;
+            connectWebSocket(sessionId);
+        });
+
+        function connectWebSocket(sessionId) {
+            console.log(sessionId);
+            const socket = new WebSocket(`ws://localhost:8000/ws/${sessionId}`);
+            socket.onmessage = function (event) {
+                statusDiv.innerText = event.data;
+            };
+        }
+    </script>
 </body>
 
 </html>

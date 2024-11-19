@@ -1,5 +1,4 @@
 import os
-import uuid
 from datetime import datetime, timezone
 from motor.motor_asyncio import AsyncIOMotorClient
 from dotenv import load_dotenv
@@ -10,6 +9,9 @@ load_dotenv()
 # Replace with your MongoDB connection string
 MONGO_URI = os.getenv("MONGODB_URI")
 
+# Replace with your GEMINI connection string
+GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
+
 # Initialize MongoDB client
 client = AsyncIOMotorClient(MONGO_URI)
 
@@ -19,7 +21,7 @@ db_collection = db["history"]  # Collection to store sessions
 
 
 async def translate_text(content: str, language: str) -> str:
-    genai.configure(api_key=os.getenv("GEMINI_API_KEY"))
+    genai.configure(api_key=GEMINI_API_KEY)
     model = genai.GenerativeModel("gemini-1.5-flash")
     response = model.generate_content(f"Translate this text to {language}: {content}")
 
@@ -37,7 +39,7 @@ async def process_translation(file_path: str, language: str, session_id: str):
         translated = await translate_text(content, language)
 
         # Save translated file
-        translated_path = f"translated_{session_id}.txt"
+        translated_path = f"./translated_file/translated_{session_id}.txt"
         with open(translated_path, "w", encoding="utf-8") as file:
             file.write(translated)
 
