@@ -47,7 +47,7 @@ async def process_translation(file_path: str, language: str, session_id: str):
         file_object = {
             "fileName": os.path.basename(file_path),
             "filePath": file_path,
-            "processedAt": datetime.now(timezone.utc).isoformat(),
+            "processedAt": datetime.now().isoformat(),
             "result": translated,
         }
 
@@ -64,7 +64,7 @@ async def process_translation(file_path: str, language: str, session_id: str):
             await db_collection.insert_one(
                 {
                     "sessionId": session_id,
-                    "createdAt": datetime.now(timezone.utc).isoformat(),
+                    "createdAt": datetime.now().isoformat(),
                     "filesProcessed": [file_object],
                 }
             )
@@ -77,7 +77,7 @@ async def process_translation(file_path: str, language: str, session_id: str):
         file_object = {
             "fileName": os.path.basename(file_path),
             "filePath": file_path,
-            "processedAt": datetime.now(timezone.utc).isoformat(),
+            "processedAt": datetime.now().isoformat(),
             "result": error_message,
         }
 
@@ -94,7 +94,7 @@ async def process_translation(file_path: str, language: str, session_id: str):
             await db_collection.insert_one(
                 {
                     "sessionId": session_id,
-                    "createdAt": datetime.now(timezone.utc).isoformat(),
+                    "createdAt": datetime.now().isoformat(),
                     "filesProcessed": [file_object],
                 }
             )

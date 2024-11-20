@@ -25,3 +25,7 @@ logs/
 # OS generated files
 .DS_Store
 Thumbs.db
+
+#Testing and debugging files
+
+test.py

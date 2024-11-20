@@ -1,14 +1,17 @@
 from fastapi import FastAPI
-from fastapi.responses import HTMLResponse
 from fastapi.middleware.cors import CORSMiddleware
-from router import websocket
-from pathlib import Path
-
+from fastapi.responses import HTMLResponse
+from fastapi.staticfiles import StaticFiles
+from router import websocket,history
 
 app = FastAPI()
 
-
 app.include_router(websocket.router)
+app.include_router(history.router)
+
+
+# Mount static files
+app.mount("/static", StaticFiles(directory="static"), name="static")
 
 
 # Frontend HTML rendering
@@ -16,12 +19,6 @@ app.include_router(websocket.router)
 async def get_form():
     with open("templates/index.html", "r") as file:
         return file.read()
-
-
-# Serve static files (CSS, JS)
-@app.get("/static/{file_name}")
-async def serve_static(file_name: str):
-    return Path(f"static/{file_name}").read_text()
 
 
 origins = ["*"]

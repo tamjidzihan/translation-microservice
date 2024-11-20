@@ -11,5 +11,5 @@ MONGO_URI = os.getenv("MONGODB_URI")
 client = MongoClient(MONGO_URI)
 
 # Access the desired database and collection
-db = client["mydatabase"]  # Replace "mydatabase" with your database name
+db = client["mydatabase"]  # database name
 history_collection = db["history"]  # Collection to store sessions
