@@ -29,26 +29,16 @@ async def translate_text(content: str, language: str) -> str:
     return response.text
 
 
-async def process_translation(file_path: str, language: str, session_id: str):
+async def process_translation(content: str, language: str, session_id: str):
     try:
-        # Read file content
-        with open(file_path, "r") as file:
-            content = file.read()
-
         # Request translation from LLM
         translated = await translate_text(content, language)
 
-        # Save translated file
-        translated_path = f"./translated_file/translated_{session_id}.txt"
-        with open(translated_path, "w", encoding="utf-8") as file:
-            file.write(translated)
-
         # Prepare file object
         file_object = {
-            "fileName": os.path.basename(file_path),
-            "filePath": file_path,
-            "processedAt": datetime.now().isoformat(),
-            "result": translated,
+            "fileName": f"translated_{session_id}.txt",
+            "content": translated,  # Store content instead of saving file
+            "processedAt": datetime.now(timezone.utc).isoformat(),
         }
 
         # Check if session exists in MongoDB
@@ -64,21 +54,18 @@ async def process_translation(file_path: str, language: str, session_id: str):
             await db_collection.insert_one(
                 {
                     "sessionId": session_id,
-                    "createdAt": datetime.now().isoformat(),
+                    "createdAt": datetime.now(timezone.utc).isoformat(),
                     "filesProcessed": [file_object],
                 }
             )
 
     except Exception as e:
         error_message = f"Error during translation: {e}"
-        print(error_message)
-
         # Store error result in MongoDB
         file_object = {
-            "fileName": os.path.basename(file_path),
-            "filePath": file_path,
-            "processedAt": datetime.now().isoformat(),
-            "result": error_message,
+            "fileName": f"translated_{session_id}.txt",
+            "content": error_message,
+            "processedAt": datetime.now(timezone.utc).isoformat(),
         }
 
         # Check if session exists in MongoDB
@@ -94,7 +81,7 @@ async def process_translation(file_path: str, language: str, session_id: str):
             await db_collection.insert_one(
                 {
                     "sessionId": session_id,
-                    "createdAt": datetime.now().isoformat(),
+                    "createdAt": datetime.now(timezone.utc).isoformat(),
                     "filesProcessed": [file_object],
                 }
             )

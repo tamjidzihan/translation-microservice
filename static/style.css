@@ -75,7 +75,7 @@ input[type="file"] {
 
 button {
   padding: 10px 20px;
-  background: #4CAF50; /* Green */
+  background: #4CAF50;
   font-size: 1rem;
   color: white;
   border: none;
@@ -111,6 +111,8 @@ select:focus {
 
 /* Notification Styling */
 .notification {
+  display: flex;
+  flex-direction: row;
   position: fixed;
   top: 20px;
   right: -300px; /* Hidden off-screen */

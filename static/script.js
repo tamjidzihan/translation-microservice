@@ -3,21 +3,22 @@ const statusDiv = document.getElementById("status");
 const downloadButton = document.getElementById("downloadButton");
 
 function showNotification(message, isLoading = false) {
-    statusDiv.innerText = message;
+    statusDiv.innerHTML = `
+        ${isLoading ? `<span class="loading-spinner"></span>` : ""} 
+        ${message}
+        ${isLoading ? "" : ` <button id="closeNotification" style="background: #a5402e;">Close</button>`}
+    `;
     statusDiv.classList.add("show");
-
-    if (isLoading) {
-        statusDiv.innerHTML = `<span class="loading-spinner"></span> ${message}`;
-    }
-
     statusDiv.style.right = "20px";
-}
 
-function hideNotification() {
-    statusDiv.style.right = "-500px";
-    setTimeout(() => {
-        statusDiv.classList.remove("show");
-    }, 5);
+    const closeNotificationButton = document.getElementById("closeNotification")
+    // Attach event listener to close button
+    if (closeNotificationButton) {
+        closeNotificationButton.onclick = () => {
+            statusDiv.style.right = "-500px";
+            statusDiv.classList.remove("show");
+        };
+    }
 }
 
 uploadForm.addEventListener("submit", async (e) => {
@@ -45,16 +46,14 @@ function connectWebSocket(sessionId) {
             showNotification("Translation complete. Download available.", false);
             downloadButton.disabled = false;
             downloadButton.onclick = () => {
-                window.location.href = `/ws/${sessionId}`;
+                window.location.href = `/ws/download/${sessionId}`;
             };
         } else {
             showNotification(message, true);
         }
     };
 
-    socket.onclose = function () {
-        hideNotification();
-    };
+
 }
 
 
