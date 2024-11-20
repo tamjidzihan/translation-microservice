@@ -37,7 +37,7 @@ async def upload_file(
     return {"session_id": session_id, "message": "File uploaded, translation started."}
 
 # WebSocket endpoint for real-time updates with documentation
-@router.websocket("/{session_id}", summary="WebSocket for real-time translation status")
+@router.websocket("/{session_id}")
 async def websocket_endpoint(websocket: WebSocket, session_id: str, background_tasks: BackgroundTasks):
     """
     WebSocket connection to provide real-time updates on file translation progress.
