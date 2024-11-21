@@ -37,7 +37,8 @@ uploadForm.addEventListener("submit", async (e) => {
 });
 
 function connectWebSocket(sessionId) {
-    const socket = new WebSocket(`ws://localhost:8000/ws/${sessionId}`);
+    // const socket = new WebSocket(`ws://localhost:8000/ws/${sessionId}`);
+    const socket = new WebSocket(`ws://translation-microservice.onrender.com/ws/${sessionId}`);
 
     socket.onmessage = function (event) {
         const message = event.data;

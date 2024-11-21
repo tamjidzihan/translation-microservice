@@ -88,9 +88,8 @@ async def websocket_endpoint(
 
         # Call process_translation with file content
         await websocket.send_text("Translating...")
-        background_tasks.add_task(process_translation, content, language, session_id)
-        time.sleep(10)
-        # await process_translation(content, language, session_id)
+        # background_tasks.add_task(process_translation, content, language, session_id)
+        await process_translation(content, language, session_id)
         await websocket.send_text("complete")
 
         await websocket.close()
